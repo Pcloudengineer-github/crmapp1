@@ -1,0 +1,43 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      php: 8.1 # Or your desired PHP version that's compatible with Amazon Linux 2/Ubuntu image
+    commands:
+      - echo "Installing PHP extensions and Composer..."
+      # Example for Amazon Linux 2. Adjust for Ubuntu if needed.
+      - yum install -y php-gd php-mbstring php-xml php-zip php-curl php-intl php-mysqlnd # Add any other PHP extensions your app needs
+      - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+      - composer --version
+  pre_build:
+    commands:
+      - echo "Running Composer install..."
+      - composer install --no-dev --optimize-autoloader # --no-dev for production builds
+  build:
+    commands:
+      - echo "Running tests (optional)..."
+      # If you have PHPUnit tests configured in composer.json and phpunit.xml:
+      # - vendor/bin/phpunit
+      - echo "Build completed on `date`"
+  post_build:
+    commands:
+      - echo "Packaging application..."
+      # The artifacts section below will handle zipping.
+      # If you need to create specific directory structures or exclude files:
+      # - mkdir artifact_temp
+      # - cp -R . artifact_temp/
+      # - (cd artifact_temp && zip -r ../application.zip .)
+
+artifacts:
+  files:
+    - '**/*' # This includes all files and folders from the current directory
+  # If you used a temp directory in post_build for custom packaging:
+  # base-directory: 'artifact_temp'
+  # files:
+  #   - 'application.zip'
+  discard-paths: no
+
+cache:
+  paths:
+    - 'vendor/**/*'
