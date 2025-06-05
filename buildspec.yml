@@ -3,7 +3,7 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      php: 8.1 # Or your desired PHP version that's compatible with Amazon Linux 2/Ubuntu image
+      php: 8.4 # Or your desired PHP version that's compatible with Amazon Linux 2/Ubuntu image
     commands:
       - echo "Installing PHP extensions and Composer..."
       # Example for Amazon Linux 2. Adjust for Ubuntu if needed.
